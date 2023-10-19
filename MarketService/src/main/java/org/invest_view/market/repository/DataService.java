@@ -5,26 +5,27 @@ import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.IssuerMetadata;
 import org.invest_view.market.model.TimePeriod;
 import org.invest_view.market.repository.request.RequestConstructor;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class DataService {
 
-    public static List<Issuer> getMainsNow() {
+    public List<Issuer> getMainsNow() {
         String[] ids = {"TCSG", "SBER", "YNDX", "MTSS", "GAZP", "LKOH"};
         List<Issuer> issuers = new ArrayList<>();
 
         for (String id : ids) {
-            issuers.add(DataService.getIssuerNow(id));
+            issuers.add(getIssuerNow(id));
         }
 
         return issuers;
     }
 
-    public static List<Issuer> getIssuerForLastMonth(String secId) {
+    public List<Issuer> getIssuerForLastMonth(String secId) {
         BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getRequest(secId));
 
         List<Issuer> issuerData;
@@ -42,7 +43,7 @@ public class DataService {
         return issuerData;
     }
 
-    public static List<Issuer> getIssuerForLastWeek(String secId) {
+    public List<Issuer> getIssuerForLastWeek(String secId) {
         BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getRequest(secId));
 
         List<Issuer> issuerData;
@@ -60,7 +61,7 @@ public class DataService {
         return issuerData;
     }
 
-    public static TimePeriod getIssuerDates(String secId) {
+    public TimePeriod getIssuerDates(String secId) {
 
         BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getDatesRequest(secId));
 
@@ -77,7 +78,7 @@ public class DataService {
         return period;
     }
 
-    public static Issuer getIssuerNow(String secId) {
+    public Issuer getIssuerNow(String secId) {
         BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getNowRequest(secId));
 
         Issuer issuer;
@@ -94,7 +95,7 @@ public class DataService {
         return issuer;
     }
 
-    public static List<Issuer> getIssuerHistory(String secId) {
+    public List<Issuer> getIssuerHistory(String secId) {
         List<Issuer> issuerHistory = new ArrayList<>();
 
         BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getHistoryCursorRequest(secId));
@@ -121,7 +122,7 @@ public class DataService {
         return issuerHistory;
     }
 
-    public static List<Issuer> getIssuerHistoryOnPage(int current, int total, String secId) {
+    public List<Issuer> getIssuerHistoryOnPage(int current, int total, String secId) {
         BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getHistroyRequest(current, secId));
 
         List<Issuer> issuerData;
@@ -139,7 +140,7 @@ public class DataService {
         return issuerData;
     }
 
-    public static List<IssuerMetadata> getAllIssuersMetadata() {
+    public List<IssuerMetadata> getAllIssuersMetadata() {
         BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getAllIssuersRequest());
 
         List<IssuerMetadata> issuersMetadata = new ArrayList<>();
@@ -157,7 +158,7 @@ public class DataService {
         return issuersMetadata;
     }
 
-    public static List<IssuerMetadata> getIssuersMetadataOnCertainLevel(int level) {
+    public List<IssuerMetadata> getIssuersMetadataOnCertainLevel(int level) {
         BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getAllIssuersRequest());
 
         List<IssuerMetadata> issuersMetadata = new ArrayList<>();
@@ -194,16 +195,16 @@ public class DataService {
 //        return issuers;
 //    }
 
-    public static List<Issuer> getIssuersOnCertainLevelNow(int level) {
-        List<IssuerMetadata> metadata = DataService.getIssuersMetadataOnCertainLevel(level);
+    public List<Issuer> getIssuersOnCertainLevelNow(int level) {
+        List<IssuerMetadata> metadata = getIssuersMetadataOnCertainLevel(level);
         List<Issuer> issuersNow = metadata.stream()
-                .map(issuerMetadata -> DataService.getIssuerNow(issuerMetadata.getSecId()))
+                .map(issuerMetadata -> getIssuerNow(issuerMetadata.getSecId()))
                 .toList();
 
         return issuersNow;
     }
 
-    private static String readJson(BufferedReader br) {
+    private String readJson(BufferedReader br) {
         String output;
         StringBuilder builder = new StringBuilder();
         try {
