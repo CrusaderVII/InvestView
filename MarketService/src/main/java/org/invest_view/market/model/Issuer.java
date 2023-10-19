@@ -1,0 +1,22 @@
+package org.invest_view.market.model;
+
+import lombok.*;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Getter
+@Setter
+public class Issuer {
+
+    private String secId;
+    private String fullName;
+    private double priceLow;
+    private double priceHigh;
+    private double priceNow;
+    private double priceOpen;
+    private double percent;
+    private String date;
+    private double change;
+
+}

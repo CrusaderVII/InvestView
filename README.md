@@ -1,0 +1,1 @@
+This is my pet-project for checking and analyzing stocks shoers of issuers, that are presented on MOEX.
