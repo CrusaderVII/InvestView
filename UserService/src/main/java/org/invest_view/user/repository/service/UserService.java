@@ -75,5 +75,4 @@ public class UserService {
         return issuerRepository.findBySecId(secId);
     }
 
-
 }

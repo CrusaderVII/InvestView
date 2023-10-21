@@ -41,4 +41,9 @@ public class GetController {
     public IssuerData getIssuer(@RequestParam String id) {
         return userService.getIssuerDataBySecId(id);
     }
+
+    @GetMapping("/user")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
+    }
 }

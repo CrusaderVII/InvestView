@@ -1,0 +1,47 @@
+version: '2'
+
+services:
+  database:
+    container_name: postgres
+    image: postgres:alpine3.18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - database
+
+  user-service:
+    container_name: user-service
+    image: user-service:latest
+    build:
+      context: .
+      dockerfile: UserService/Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/investview
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - database
+
+  market-service:
+    container_name: market-service
+    image: market-service:latest
+    build:
+      context: .
+      dockerfile: MarketService/Dockerfile
+    ports:
+      - "8081:8080"
+    networks:
+      - database
+
+networks:
+  database:
+    driver: bridge
