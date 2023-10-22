@@ -188,12 +188,11 @@ public class JsonParser {
         int secIdIndex = fields.indexOf("SECID");
         int nameIndex = fields.indexOf("SHORTNAME");
         int levelIndex = fields.indexOf("LISTLEVEL");
-        int typeIndex = fields.indexOf("SECTYPE");
 
         innerNode.get("data")
                 .iterator()
                 .forEachRemaining(node -> {
-                            if (node.get(levelIndex).asInt()==level && node.get(typeIndex).asText().equals("1")) {
+                            if (node.get(levelIndex).asInt()==level) {
                                 allIssuersMetadata.add(new IssuerMetadata(
                                         node.get(secIdIndex).asText(),
                                         node.get(nameIndex).asText()));

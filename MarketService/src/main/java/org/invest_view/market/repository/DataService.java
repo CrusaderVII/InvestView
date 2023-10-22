@@ -5,6 +5,8 @@ import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.IssuerMetadata;
 import org.invest_view.market.model.TimePeriod;
 import org.invest_view.market.repository.request.RequestConstructor;
+import org.invest_view.user.model.IssuerData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -12,7 +14,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class DataService {
+public class DataService{
+
+    @Autowired
+    DataRepository dataRepository;
 
     public List<Issuer> getMainsNow() {
         String[] ids = {"TCSG", "SBER", "YNDX", "MTSS", "GAZP", "LKOH"};
@@ -202,6 +207,15 @@ public class DataService {
                 .toList();
 
         return issuersNow;
+    }
+
+    public void saveAllIssuersToDatabase() {
+        List<IssuerMetadata> issuers = getIssuersMetadataOnCertainLevel(1);
+
+        issuers.stream().forEach(issuerMetadata -> {
+            IssuerData data = new IssuerData(issuerMetadata.getSecId(), issuerMetadata.getFullName());
+            dataRepository.save(data);
+        });
     }
 
     private String readJson(BufferedReader br) {
