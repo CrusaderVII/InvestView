@@ -218,6 +218,10 @@ public class DataService{
         });
     }
 
+    public List<IssuerData> getAllIssuersFromDatabase() {
+        return dataRepository.findAll();
+    }
+
     private String readJson(BufferedReader br) {
         String output;
         StringBuilder builder = new StringBuilder();
