@@ -72,14 +72,4 @@ public class DataMainController {
 
         return issuers;
     }
-
-    @PostMapping("issuers/save/all")
-    public void saveAllIssuersToDatabase() {
-        service.saveAllIssuersToDatabase();
-    }
-
-    @GetMapping("issuers/get/all")
-    public List<IssuerData> getAllIssuersFromDatabase() {
-        return service.getAllIssuersFromDatabase();
-    }
 }

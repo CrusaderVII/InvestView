@@ -209,19 +209,6 @@ public class DataService{
         return issuersNow;
     }
 
-    public void saveAllIssuersToDatabase() {
-        List<IssuerMetadata> issuers = getIssuersMetadataOnCertainLevel(1);
-
-        issuers.stream().forEach(issuerMetadata -> {
-            IssuerData data = new IssuerData(issuerMetadata.getSecId(), issuerMetadata.getFullName());
-            dataRepository.save(data);
-        });
-    }
-
-    public List<IssuerData> getAllIssuersFromDatabase() {
-        return dataRepository.findAll();
-    }
-
     private String readJson(BufferedReader br) {
         String output;
         StringBuilder builder = new StringBuilder();

@@ -11,7 +11,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>org.inves-view</groupId>
+    <groupId>org.invest-view</groupId>
     <artifactId>UserService</artifactId>
     <version>1.0-SNAPSHOT</version>
 

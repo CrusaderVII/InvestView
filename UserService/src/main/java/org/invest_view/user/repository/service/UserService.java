@@ -2,6 +2,7 @@ package org.invest_view.user.repository.service;
 import org.invest_view.user.model.IssuerData;
 import org.invest_view.user.model.User;
 import org.invest_view.user.repository.IssuerRepository;
+import org.invest_view.user.repository.RequestConstructor;
 import org.invest_view.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,4 +76,7 @@ public class UserService {
         return issuerRepository.findBySecId(secId);
     }
 
+    public void saveAllIssuers() {
+        RequestConstructor.getPlainJson();
+    }
 }
