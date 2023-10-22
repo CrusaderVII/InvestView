@@ -5,6 +5,7 @@ import org.invest_view.user.repository.IssuerRepository;
 import org.invest_view.user.repository.service.request.RequestConstructor;
 import org.invest_view.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,17 +29,21 @@ public class UserService {
     }
 
     public User getUserByEmailAndPassword(String email, String password) {
-        User user = userRepository.findByEmailAndPassword(email, password);
-        if (user==null) user = new User("not found", "", "");
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(7);
+        User user = getUserByEmail(email);
 
-        return user;
+        if (user==null) return new User("not found", "", "");
+
+        if (encoder.matches(password, user.getPassword())) return user;
+        else return new User("not found", "", "");
     }
 
     public User getUserByName(String name) {
-        User user = userRepository.findByName(name);
-        if(user==null) user = new User("not found", "", "");
+        return userRepository.findByName(name);
+    }
 
-        return user;
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public List<User> getAllUsers() {
@@ -46,6 +51,11 @@ public class UserService {
     }
 
     public User saveUser(User user) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(7);
+        String encodedPassword = encoder.encode(user.getPassword());
+
+        user.setPassword(encodedPassword);
+
         return userRepository.save(user);
     }
 
