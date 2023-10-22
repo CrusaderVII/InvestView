@@ -22,7 +22,6 @@ public class JsonParser {
     }
 
     public static JsonNode parse(String json) throws IOException {
-
         return mapper.readTree(json);
     }
 

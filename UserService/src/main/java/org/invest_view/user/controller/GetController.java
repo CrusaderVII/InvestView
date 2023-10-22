@@ -42,7 +42,7 @@ public class GetController {
         return userService.getIssuerDataBySecId(id);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
