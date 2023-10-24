@@ -5,23 +5,9 @@
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InvestView</title>
-    <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <div id="app" v-bind:style="styles.css" class="app-container">
-      <p>{{ message }}</p>
-    </div>
-
-    <script type="module">
-      import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
-    
-      createApp({
-        data() {
-          return {
-            message: 'Hellow world'
-          }
-        }
-      }).mount('#app')
-    </script>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
