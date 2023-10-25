@@ -10,12 +10,35 @@
     }
 
     const mains = ref([new Issuer('GAZP', 'Газпром', 270.1), new Issuer('TATN', 'Татнефть', 619.3), new Issuer('YNDX', 'Яндекс', 2185)])
+    var showNavbarState = ref(true)
+
+    const showNavbar = () => {
+      showNavbarState = !showNavbarState
+
+      if (!showNavbarState) {
+        document.getElementById('navbar').style.top = "0"
+        document.getElementById('switcher').style.top = "55px"
+        document.getElementById('down-arr').style.transform = "rotate(180deg)"
+      } else {
+        document.getElementById('navbar').style.top = "-55px";
+        document.getElementById('switcher').style.top = "0"
+        document.getElementById('down-arr').style.transform = "rotate(0deg)"
+      }
+    }
 </script>
 
 <template>
   <main>
-    <div class="navbar">
-      <fa class="down-arrow" icon="fa-chevron-down"></fa>
+    <div class="navbar" id="navbar">
+      <ul class="navbar-menu">
+        <li><a>Login</a></li>
+        <li><a>About project</a></li>
+        <li><a>Contact</a></li>
+      </ul>
+      <h1>InvestView</h1>
+    </div>
+    <div class="navbar-switch" id="switcher">
+      <fa id="down-arr" class="down-arrow" icon="fa-chevron-down" @click="showNavbar()"></fa>
     </div>
 
     <div class="input-wrapper">
@@ -55,10 +78,40 @@
     flex-direction: column;
     align-items: center;
     background-color: #1A1A1A;
-    overflow: hidden;
   }
 
   .navbar {
+    top: -55px;
+    position: fixed;
+    height: 55px;
+    width: 100vw;
+    transition: 0.4s;
+    background-color: #2F2F2F;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .navbar h1 {
+    margin-right: 30px;
+    color: #A0A0A0;
+  }
+
+  .navbar-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    width: 20%;
+  }
+
+  .navbar-menu li {
+    list-style: none;
+    color: #A0A0A0;
+  }
+
+  .navbar-switch {
+    position: fixed;
     width: 10vw;
     min-width: 70px;
     height: 5vh;
@@ -67,12 +120,15 @@
     justify-content: center;
     align-items: center;
     border-radius: 0 0 15px 15px;
+    transition: 0.4s;
   }
 
   .down-arrow {
     color: #A0A0A0;
     font-size: xx-large;
+    cursor: pointer;
   }
+
   .input-wrapper{
     margin-top: 30vh;
     width: 40vw;
