@@ -5,7 +5,6 @@ import org.invest_view.market.model.IssuerMetadata;
 import org.invest_view.market.model.PageMetadata;
 import org.invest_view.market.model.TimePeriod;
 import org.invest_view.market.repository.DataService;
-import org.invest_view.user.model.IssuerData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/market-data/v1/main")
+@CrossOrigin(originPatterns = "http://localhost:5173/")
 public class DataMainController {
 
     @Autowired

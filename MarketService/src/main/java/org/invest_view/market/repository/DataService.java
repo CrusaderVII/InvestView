@@ -5,8 +5,6 @@ import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.IssuerMetadata;
 import org.invest_view.market.model.TimePeriod;
 import org.invest_view.market.repository.request.RequestConstructor;
-import org.invest_view.user.model.IssuerData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -15,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class DataService{
-
-    @Autowired
-    DataRepository dataRepository;
 
     public List<Issuer> getMainsNow() {
         String[] ids = {"TCSG", "SBER", "YNDX", "MTSS", "GAZP", "LKOH"};
