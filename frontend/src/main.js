@@ -17,5 +17,5 @@ library.add(fas)
 
 createApp(App)
     .component('fa', FontAwesomeIcon)
-    .mount('#app')
+    .mount('#app') 
 

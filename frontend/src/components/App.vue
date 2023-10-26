@@ -1,16 +1,19 @@
 <script setup>
   import { ref } from 'vue';
-    
-    class Issuer {
-        constructor(secId, fullName, priceNow) {
-            this.secId = secId
-            this.fullName = fullName
-            this.priceNow = priceNow
-        }
-    }
-
-    const mains = ref([new Issuer('GAZP', 'Газпром', 270.1), new Issuer('TATN', 'Татнефть', 619.3), new Issuer('YNDX', 'Яндекс', 2185)])
+    // const mains = ref([new Issuer('GAZP', 'Газпром', 270.1), new Issuer('TATN', 'Татнефть', 619.3), new Issuer('YNDX', 'Яндекс', 2185)])
     var showNavbarState = ref(true)
+    var changeMainsState = ref(true)
+
+    const mains1 = ref(null)
+    const mains2 = ref(null)
+
+    fetch('http://localhost:8081/api/market-data/v1/main/mains-now')
+      .then(response => response.json())
+      .then(data => {
+        mains1.value = data.slice(0, 3)
+        mains2.value = data.slice(3, 6)
+        }
+      )
 
     const showNavbar = () => {
       showNavbarState = !showNavbarState
@@ -25,6 +28,7 @@
         document.getElementById('down-arr').style.transform = "rotate(0deg)"
       }
     }
+
 </script>
 
 <template>
@@ -50,10 +54,10 @@
     </div>
     <div class="mains-wrapper">
       <div class="btn-wrapper">
-        <button class="arrow-btn"><fa class="arrow-icon" icon="arrow-left"></fa></button>
+        <button class="arrow-btn" @click="changeMainsState = !changeMainsState"><fa class="arrow-icon" icon="arrow-left"></fa></button>
       </div>
-      <div class="mains-container">
-        <div v-for="issuer in mains" class="main-card">
+      <div  class="mains-container">
+        <div v-for="issuer in (changeMainsState? mains1 : mains2)" class="main-card">
           <div class="card-half">
             <h2 class="secid">{{ issuer.secId }}</h2>
             <h3 class="fullname">{{ issuer.fullName }}</h3>
@@ -64,7 +68,7 @@
         </div>
       </div>
       <div class="btn-wrapper">
-        <button class="arrow-btn"><fa class="arrow-icon" icon="arrow-right"></fa></button>
+        <button class="arrow-btn"  @click="changeMainsState = !changeMainsState"><fa class="arrow-icon" icon="arrow-right"></fa></button>
       </div>
     </div>
   </main>
@@ -236,11 +240,22 @@
     border-radius: 100%;
     height: 40px;
     width: 40px;
+    transition: 0.4s;
+    cursor: pointer;
+  }
+
+  .arrow-btn:hover {
+    background-color: #42B883;
+  }
+
+  .arrow-btn:hover * {
+    color: #1A1A1A;
   }
 
   .arrow-icon {
     color: #42B883;
     font-size: large;
     margin-top: 2px;
+    transition: 0.4s;
   }
 </style>
