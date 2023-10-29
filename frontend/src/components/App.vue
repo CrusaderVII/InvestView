@@ -5,6 +5,10 @@
     var changeMainsState = ref(true)
     var showLoginFormState = ref(false)
     var showRegisterFormState = ref(false)
+    var validationError = ref(false)
+
+    var email = ref(null)
+    var password = ref(null)
 
     const mains1 = ref(null)
     const mains2 = ref(null)
@@ -17,6 +21,15 @@
         mains2.value = data.slice(3, 6)
         }
       )
+
+    const getUser = (email, password) => {
+      fetch(`http://localhost:8080/api/user-service/v1/main/?email=${email}&password=${password}`)
+        .then(response => response.json())
+        .then(data => user.value = data)
+
+        if(user.id != null) showLoginFormState = false
+        else user = null
+    }
 
     const showNavbar = () => {
       showNavbarState = !showNavbarState
@@ -37,6 +50,10 @@
       //showRegisterFormState = true
     }
 
+    const changeMains = () => {
+      changeMainsState = !changeMainsState
+    }
+
 </script>
 
 <template>
@@ -51,19 +68,20 @@
         </div>
         <div class="login-input-wrapper">
           <h1>Login to InvestView</h1>
-          <input type="text" class="login-input" placeholder="email">
-          <input type="password" class="login-input" placeholder="password">
+          <input type="text" v-model="email" class="login-input" placeholder="email">
+          <input type="password" v-model="password" class="login-input" placeholder="password">
           <div class="register-link-wrapper">
             <a class="register-link" @click="showRegisterForm()">Don't have an account? Register!</a>
           </div>
         </div>
-        <button class="login-btn">Login</button>
+        <button class="login-btn" @click="getUser(email, password)">Login</button>
       </div>
     </div>
 
     <div class="navbar" id="navbar">
       <ul class="navbar-menu">
-        <li><a @click="showLoginFormState = true">Login</a></li>
+        <li v-if="user == null"><a @click="showLoginFormState = true">Login</a></li>
+        <li v-else><a style="font-weight: bold;">{{ user.name }}</a></li>
         <li><a>About project</a></li>
         <li><a>Contact</a></li>
       </ul>
@@ -82,7 +100,7 @@
     </div>
     <div class="mains-wrapper">
       <div class="btn-wrapper">
-        <button class="arrow-btn" @click="changeMainsState = !changeMainsState"><fa class="arrow-icon" icon="arrow-left"></fa></button>
+        <button class="arrow-btn" @click="changeMainsState=!changeMainsState"><fa class="arrow-icon" icon="arrow-left"></fa></button>
       </div>
       <div  class="mains-container">
         <div v-for="issuer in (changeMainsState? mains1 : mains2)" class="main-card">
@@ -96,7 +114,15 @@
         </div>
       </div>
       <div class="btn-wrapper">
-        <button class="arrow-btn"  @click="changeMainsState = !changeMainsState"><fa class="arrow-icon" icon="arrow-right"></fa></button>
+        <button class="arrow-btn"  @click="changeMainsState=!changeMainsState"><fa class="arrow-icon" icon="arrow-right"></fa></button>
+      </div>
+    </div>
+    <div class="mains-condition">
+      <div class="current-condition">
+        <div v-if="changeMainsState" class="active"></div>
+      </div>
+      <div class="current-condition">
+        <div v-if="!changeMainsState" class="active"></div>
       </div>
     </div>
   </main>
@@ -408,4 +434,30 @@
     margin-top: 2px;
     transition: 0.4s;
   }
+
+  .mains-condition {
+    width: 5vw;
+    height: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+  }
+
+  .current-condition {
+    width: 20px;
+    height: 100%;
+    border-radius: 3px;
+    background-color: #2F2F2F;
+    padding-right: 12px;
+  }
+
+  .current-condition .active {
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    background-color: #A0A0A0;
+    padding-right: 12px;
+  }
+
 </style>
