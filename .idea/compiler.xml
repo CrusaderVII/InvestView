@@ -9,12 +9,17 @@
         <outputRelativeToContentRoot value="true" />
         <module name="UserService" />
         <module name="MarketService" />
+        <module name="ServiceDiscovery" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="untitled" target="18" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="MarketService" options="-parameters" />
+      <module name="ServiceDiscovery" options="-parameters" />
       <module name="UserService" options="-parameters" />
     </option>
   </component>
