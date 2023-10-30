@@ -10,8 +10,6 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
-    networks:
-      - database
 
   user-service:
     container_name: user-service
@@ -28,8 +26,7 @@ services:
       - "8080:8080"
     depends_on:
       - database
-    networks:
-      - database
+      - discovery-service
 
   market-service:
     container_name: market-service
@@ -39,8 +36,18 @@ services:
       dockerfile: MarketService/Dockerfile
     ports:
       - "8081:8080"
-    networks:
-      - database
+    depends_on:
+      - discovery-service
+
+
+  discovery-service:
+    container_name: discovery-service
+    image: discovery-service:latest
+    build:
+      context: .
+      dockerfile: ServiceDiscovery/Dockerfile
+    ports:
+      - "8761:8761"
 
 networks:
   database:

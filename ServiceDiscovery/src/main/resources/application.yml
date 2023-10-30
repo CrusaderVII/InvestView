@@ -9,3 +9,5 @@ eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka

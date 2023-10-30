@@ -1,3 +1,8 @@
 spring:
   application:
     name: market-service
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
