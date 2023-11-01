@@ -2,13 +2,15 @@ package org.invest_view.user.controller;
 
 import org.invest_view.user.model.IssuerData;
 import org.invest_view.user.model.User;
+import org.invest_view.user.repository.service.CloudService;
 import org.invest_view.user.repository.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @RestController
@@ -17,6 +19,9 @@ public class GetController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CloudService cloudService;
 
     @GetMapping("/user/id")
     public User getUserById(@RequestParam Long id) {
@@ -45,5 +50,10 @@ public class GetController {
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file) {
+        return new ResponseEntity<>(cloudService.uploadFile(file), HttpStatus.OK);
     }
 }

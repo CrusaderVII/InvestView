@@ -6,3 +6,15 @@ eureka:
   client:
     service-url:
       defaultZone: http://discovery-service:8761/eureka
+
+cloud:
+  aws:
+    credentials:
+      access-key: YCAJEbk6vJEloozF63-47tvGW
+      secret-key: YCMr7yFyFLCPsIY31e1WkSzpDFqhRZnM49OZde2p
+  region:
+    static: ru-central1
+
+application:
+  bucket:
+    name: investview-company-icons
