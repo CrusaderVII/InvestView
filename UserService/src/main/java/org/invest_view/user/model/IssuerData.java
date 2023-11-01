@@ -54,6 +54,11 @@ public class IssuerData {
     @JsonIgnore
     private List<User> users;
 
+    @Column(
+            name = "image_id"
+    )
+    private String imageId;
+
     public IssuerData(String secId, String fullName) {
         this.secId = secId;
         this.fullName = fullName;

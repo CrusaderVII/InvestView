@@ -25,12 +25,12 @@ public class CloudService {
     @Value("${application.bucket.name}")
     private String bucketName;
 
-    public String uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file, String secId) {
         File fileObj = convertMultiPartFileToFile(file);
-        String fileName = generateObjectName();
+        String fileName = secId;
         awsS3client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         fileObj.delete();
-        return "File uploaded : " + fileName;
+        return fileName;
     }
 
     private File convertMultiPartFileToFile(MultipartFile file) {
@@ -41,9 +41,5 @@ public class CloudService {
             log.error("Error converting multipartFile to file", e);
         }
         return convertedFile;
-    }
-
-    private String generateObjectName() {
-        return UUID.randomUUID().toString();
     }
 }

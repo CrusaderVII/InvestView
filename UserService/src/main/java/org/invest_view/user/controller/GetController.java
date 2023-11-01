@@ -53,7 +53,14 @@ public class GetController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file) {
-        return new ResponseEntity<>(cloudService.uploadFile(file), HttpStatus.OK);
+    public ResponseEntity<String> uploadFile(@RequestParam(value = "file") MultipartFile file,
+                                             @RequestParam String secId) {
+        String imageId = cloudService.uploadFile(file, secId);
+
+        IssuerData issuer = userService.getIssuerDataBySecId(secId);
+        issuer.setImageId(imageId);
+        userService.saveIssuer(issuer);
+
+        return new ResponseEntity<>(String.format("Image uploaded for %s company", secId), HttpStatus.OK);
     }
 }

@@ -91,6 +91,10 @@ public class UserService {
                 .forEach(issuerData -> issuerRepository.save(issuerData));
     }
 
+    public IssuerData saveIssuer(IssuerData issuer) {
+        return issuerRepository.save(issuer);
+    }
+
     public List<IssuerData> getAllIssuers() {
         return issuerRepository.findAll();
     }
