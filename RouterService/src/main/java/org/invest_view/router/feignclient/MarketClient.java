@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @FeignClient(name = "MARKET-SERVICE", path = "api/market-data/v1/")
-public interface MarketMainClient {
+public interface MarketClient {
 
     //MAIN-controllers
 
@@ -25,9 +25,6 @@ public interface MarketMainClient {
 
     @GetMapping("main/stock/pages")
     public PageMetadataResponse getPages();
-
-    @GetMapping("main/last-month")
-    public List<IssuerResponse> getIssuer(@RequestParam String id);
 
     @GetMapping("main/dates")
     public TimePeriodResponse getIssuerDates(@RequestParam String id);
