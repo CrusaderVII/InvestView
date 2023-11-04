@@ -20,10 +20,10 @@ public class IssuerController {
     @Autowired
     CloudService cloudService;
 
-    @PostMapping("save/issuer")
-    public void addIssuerToUser(@RequestParam String userName,
+    @PostMapping("/add")
+    public IssuerData addIssuerToUser(@RequestParam String userName,
                                 @RequestParam String secId) {
-        service.saveIssuerToUser(userName, secId);
+        return service.saveIssuerToUser(userName, secId);
     }
 
     @PostMapping("/save/all")
@@ -36,8 +36,8 @@ public class IssuerController {
         return service.getAllIssuers();
     }
 
-    @DeleteMapping("/delete/issuer")
-    public void deleteIssuerFromUser(@RequestParam String userName, @RequestParam String secId) {
+    @DeleteMapping("/remove")
+    public void removeIssuerFromUser(@RequestParam String userName, @RequestParam String secId) {
         service.deleteIssuerFromUser(userName, secId);
     }
 
