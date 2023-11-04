@@ -12,49 +12,49 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "MARKET-SERVICE", path = "api/market-data/v1/")
+@FeignClient(name = "MARKET-SERVICE", path = "api/market-data/v1")
 public interface MarketClient {
 
     //MAIN-controllers
 
-    @GetMapping("main/mains-now")
+    @GetMapping("/main/mains-now")
     public List<IssuerResponse> getMainsNow();
 
-    @GetMapping("main/stock")
+    @GetMapping("/main/stock")
     public List<IssuerResponse> getStockNow(@RequestParam int page);
 
-    @GetMapping("main/stock/pages")
+    @GetMapping("/main/stock/pages")
     public PageMetadataResponse getPages();
 
-    @GetMapping("main/dates")
+    @GetMapping("/main/dates")
     public TimePeriodResponse getIssuerDates(@RequestParam String id);
 
-    @GetMapping("main/history")
+    @GetMapping("/main/history")
     public List<IssuerResponse> getIssuerHistory(@RequestParam String id);
 
-    @GetMapping("main/issuers")
+    @GetMapping("/main/issuers")
     public List<IssuerMetadataResponse> getAllIssuers();
 
-    @GetMapping("main/issuers/level")
+    @GetMapping("/main/issuers/level")
     public List<IssuerMetadataResponse> getAllIssuersOnCertainLevel(@RequestParam int level);
 
     //NOW-controllers
 
-    @GetMapping("/issuer")
+    @GetMapping("/now/issuer")
     public IssuerResponse getIssuerNow(@RequestParam String secId);
 
-    @PostMapping("now/issuers/certain")
+    @PostMapping("/now/issuers/certain")
     public List<IssuerResponse> getCertainIssuersNow(@RequestBody List<IssuerMetadataResponse> list);
 
-    @GetMapping("now/all")
+    @GetMapping("/now/all")
     public List<IssuerResponse> getAllIssuersNow(@RequestParam int page);
 
     //HISTORY-controllers
 
-    @GetMapping("/last/month")
+    @GetMapping("/history/last/month")
     public List<IssuerResponse> getIssuerForLastMonth(@RequestParam String secId);
 
-    @GetMapping("/last/week")
+    @GetMapping("/history/last/week")
     public List<IssuerResponse> getIssuerForLastWeek(@RequestParam String secId);
 
 }
