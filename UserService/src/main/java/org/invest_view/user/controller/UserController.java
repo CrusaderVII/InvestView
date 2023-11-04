@@ -9,16 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/user-service/v1/main")
+@RequestMapping("api/user-service/v1/user")
 @CrossOrigin(originPatterns = "http://localhost:5173/")
-public class UserMainController {
+public class UserController {
 
     @Autowired
     UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("/auth")
     public User authenticationUser(@RequestParam String email, @RequestParam String password) {
-
         return userService.getUserByEmailAndPassword(email, password);
     }
 
@@ -33,30 +32,10 @@ public class UserMainController {
 
         return userService.getUserByName(userName)
                 .getIssuersData();
-
     }
 
-//    @GetMapping("save/all-issuers")
-//    public void saveAllIssuers() {
-//        List<IssuerData> list = new ArrayList<>();
-//
-//        list = RequestConstructor.getAllIssuersMetadataResponse(list.getClass());
-//
-//        list.stream()
-//                .forEach(x -> issuerRepository
-//                        .save(new IssuerData(x.getSecId(), x.getFullName())));
-//    }
-
-    @GetMapping("add/issuer")
-    public void addIssuerToUser(@RequestParam String userName,
-                                @RequestParam String secId) {
-
-        userService.saveIssuerToUser(userName, secId);
-    }
-
-    @DeleteMapping("/delete/issuer")
-    public void deleteIssuerFromUser(@RequestParam String userName, @RequestParam String secId) {
-
-        userService.deleteIssuerFromUser(userName, secId);
+    @DeleteMapping("/delete")
+    public User deleteUserByName(@RequestParam String userName) {
+        return userService.deleteUserByName(userName);
     }
 }

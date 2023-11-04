@@ -59,8 +59,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public User deleteUserByName(String name) {
+        return userRepository.deleteByName(name);
     }
 
     public IssuerData saveIssuerToUser(String userName, String secId) {
