@@ -2,6 +2,10 @@ package org.invest_view.user.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,6 +44,7 @@ public class User {
             columnDefinition = "TEXT",
             unique = true
     )
+    @Size(min = 2, message = "Name should contain at least 2 characters")
     private String name;
 
     @Column(
@@ -48,6 +53,7 @@ public class User {
             columnDefinition = "TEXT",
             unique = true
     )
+    @Email(message = "Email is invalid")
     private String email;
 
     @Column(
@@ -55,6 +61,8 @@ public class User {
             nullable = false,
             columnDefinition = "TEXT"
     )
+
+    @Size(min = 8, message = "Password should contain at least 8 symbols")
     private String password;
 
     @ManyToMany
