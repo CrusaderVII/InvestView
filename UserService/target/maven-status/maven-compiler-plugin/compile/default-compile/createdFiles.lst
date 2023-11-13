@@ -1,6 +1,5 @@
 org\invest_view\user\repository\IssuerRepository.class
 org\invest_view\user\controller\IssuerController.class
-org\invest_view\user\controller\UserExeptionHandler.class
 org\invest_view\user\repository\service\UserService.class
 org\invest_view\user\controller\MainController.class
 org\invest_view\user\configuration\S3StorageConfiguration.class

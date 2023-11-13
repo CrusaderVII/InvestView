@@ -50,11 +50,11 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User saveUser(User user) {
+    public User saveUser(User info) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(7);
-        String encodedPassword = encoder.encode(user.getPassword());
+        String encodedPassword = encoder.encode(info.getPassword());
 
-        user.setPassword(encodedPassword);
+        User user = new User(info.getName(), info.getEmail(), encodedPassword);
 
         return userRepository.save(user);
     }
