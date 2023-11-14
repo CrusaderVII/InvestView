@@ -1,7 +1,10 @@
 package org.invest_view.user.repository.service;
+import jakarta.transaction.Transactional;
 import org.invest_view.user.model.IssuerData;
 import org.invest_view.user.model.User;
+import org.invest_view.user.model.ValidationToken;
 import org.invest_view.user.repository.IssuerRepository;
+import org.invest_view.user.repository.TokenRepository;
 import org.invest_view.user.repository.service.request.RequestConstructor;
 import org.invest_view.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +16,10 @@ import java.util.List;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     IssuerRepository issuerRepository;
+    @Autowired
+    TokenRepository tokenRepository;
 
     public UserService() {
 
@@ -50,15 +54,20 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public User saveUser(User info) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(7);
         String encodedPassword = encoder.encode(info.getPassword());
 
         User user = new User(info.getName(), info.getEmail(), encodedPassword);
+        ValidationToken token = new ValidationToken(user);
+        user.setToken(token);
 
+        tokenRepository.save(token);
         return userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }

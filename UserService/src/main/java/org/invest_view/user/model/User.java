@@ -57,22 +57,11 @@ public class User {
     )
     @Email(message = "Email is invalid")
     private String email;
-
-    @Column(
-            name = "email_confirm_code"
-    )
-    private String emailConfirmCode;
-
-    @Column(
-            name = "is_email_confirmed"
-    )
-    private boolean isEmailConfirmed;
     @Column(
             name = "password",
             nullable = false,
             columnDefinition = "TEXT"
     )
-
     @Size(min = 8, message = "Password should contain at least 8 symbols")
     private String password;
 
@@ -82,9 +71,12 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "issuer_id")
     )
-
     @JsonIgnore
     private List<IssuerData> issuersData;
+
+    @OneToOne
+    @JsonIgnore
+    private ValidationToken token;
 
     public User (String name, String email, String password) {
         this.name = name;

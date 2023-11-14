@@ -10,5 +10,7 @@ org\invest_view\user\repository\service\request\RequestConstructor.class
 org\invest_view\user\model\IssuerData.class
 org\invest_view\user\UserServiceApplication.class
 org\invest_view\user\model\User.class
+org\invest_view\user\model\ValidationToken.class
 org\invest_view\user\controller\UserController.class
+org\invest_view\user\repository\TokenRepository.class
 org\invest_view\user\configuration\SecurityConfiguration.class

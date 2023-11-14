@@ -2,8 +2,11 @@ package org.invest_view.user.controller;
 
 import org.invest_view.user.model.IssuerData;
 import org.invest_view.user.model.User;
+import org.invest_view.user.model.ValidationToken;
 import org.invest_view.user.repository.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,5 +31,13 @@ public class MainController {
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/user/token")
+    public ResponseEntity<String> getUserWithToken(@RequestParam String name) {
+        User user = userService.getUserByName(name);
+        ValidationToken token = user.getToken();
+
+        return new ResponseEntity<>(user.getEmail()+": "+token.getToken()+" - "+token.getGeneratedAt(), HttpStatus.OK);
     }
 }
