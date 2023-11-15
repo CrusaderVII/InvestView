@@ -5,7 +5,9 @@ org\invest_view\user\controller\MainController.class
 org\invest_view\user\configuration\S3StorageConfiguration.class
 org\invest_view\user\repository\service\CloudService.class
 org\invest_view\user\repository\service\request\JsonParser.class
+org\invest_view\user\repository\service\MailService$1.class
 org\invest_view\user\repository\UserRepository.class
+org\invest_view\user\repository\service\MailService.class
 org\invest_view\user\repository\service\request\RequestConstructor.class
 org\invest_view\user\model\IssuerData.class
 org\invest_view\user\UserServiceApplication.class

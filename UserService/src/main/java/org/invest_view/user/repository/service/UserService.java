@@ -72,8 +72,9 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User deleteUserByName(String name) {
-        return userRepository.deleteByName(name);
+    @Transactional
+    public void deleteUserByName(String name) {
+        userRepository.deleteByName(name);
     }
 
     public IssuerData saveIssuerToUser(String userName, String secId) {

@@ -5,22 +5,18 @@ import jakarta.validation.Valid;
 import org.invest_view.user.model.IssuerData;
 import org.invest_view.user.model.User;
 import org.invest_view.user.repository.service.UserService;
+import org.invest_view.user.repository.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @Validated
@@ -29,6 +25,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    MailService mailService;
 
     @GetMapping("/auth")
     public User authenticationUser(@RequestParam String email, @RequestParam String password) {
@@ -37,7 +35,14 @@ public class UserController {
 
     @PostMapping("/save")
     public ResponseEntity<User> saveUser(@Valid @RequestBody User user, Errors errors) {
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.OK);
+        User result = userService.saveUser(user);
+        try {
+            mailService.sendMessage(result);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/issuers")
@@ -48,8 +53,8 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public User deleteUserByName(@RequestParam String userName) {
-        return userService.deleteUserByName(userName);
+    public void deleteUserByName(@RequestParam String userName) {
+        userService.deleteUserByName(userName);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
