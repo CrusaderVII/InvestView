@@ -2,6 +2,7 @@ package org.invest_view.market.repository.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.market_tools.MarketTool;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 public class MarketToolsService {
@@ -29,9 +30,6 @@ public class MarketToolsService {
             case EMA100 -> {
                 result = calculateEMA100(issuerData);
             }
-            case EMA200 -> {
-                result = calculateEMA200(issuerData);
-            }
         }
 
         marketTool.setValues(result);
@@ -41,30 +39,40 @@ public class MarketToolsService {
     private List<Double> calculateRSI(List<Issuer> issuerData) {
         List<Double> values = new ArrayList<>();
 
-        issuerData.forEach(issuer -> {
+        double positiveDays = 0;
+        double negativeDays = 0;
 
-        });
+        for (Issuer issuer : issuerData) {
+            if(issuer.getChange()>=0) positiveDays+=issuer.getChange();
+            else negativeDays-=issuer.getChange();
+        }
 
         return values;
     }
 
     private List<Double> calculateEMA100(List<Issuer> issuerData) {
         List<Double> values = new ArrayList<>();
+        values.add(issuerData.get(0).getPriceClose());
 
-        issuerData.forEach(issuer -> {
-
-        });
-
-        return values;
-    }
-
-    private List<Double> calculateEMA200(List<Issuer> issuerData) {
-        List<Double> values = new ArrayList<>();
-
-        issuerData.forEach(issuer -> {
-
-        });
+        for (int i = 1; i < issuerData.size(); i++) {
+            double previousClosePricesSum = 0;
+            for (int j = 0; j <= i; j++) {
+                previousClosePricesSum+=issuerData.get(j).getPriceClose();
+            }
+            double emaValue = previousClosePricesSum/i+1;
+            values.add(emaValue);
+        }
 
         return values;
     }
+
+//    private List<Double> calculateEMA200(List<Issuer> issuerData) {
+//        List<Double> values = new ArrayList<>();
+//
+//        issuerData.forEach(issuer -> {
+//
+//        });
+//
+//        return values;
+//    }
 }

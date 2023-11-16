@@ -17,6 +17,7 @@ public class Issuer {
     private double priceHigh;
     private double priceNow;
     private double priceOpen;
+    private double priceClose;
     private double percent;
     private String date;
     private double change;
