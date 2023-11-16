@@ -1,9 +1,8 @@
 package  org.invest_view.market.controller;
 
-import org.apache.catalina.User;
 import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.IssuerMetadata;
-import org.invest_view.market.repository.DataService;
+import org.invest_view.market.repository.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

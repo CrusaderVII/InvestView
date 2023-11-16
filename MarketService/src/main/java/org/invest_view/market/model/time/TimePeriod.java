@@ -1,4 +1,4 @@
-package org.invest_view.market.model;
+package org.invest_view.market.model.time;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

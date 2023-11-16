@@ -2,6 +2,8 @@ package org.invest_view.market.model;
 
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

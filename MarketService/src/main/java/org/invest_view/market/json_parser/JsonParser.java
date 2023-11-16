@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.IssuerFactory;
 import org.invest_view.market.model.IssuerMetadata;
-import org.invest_view.market.model.TimePeriod;
+import org.invest_view.market.model.time.TimePeriod;
 
 import java.io.IOException;
 import java.util.ArrayList;

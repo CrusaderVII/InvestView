@@ -1,7 +1,7 @@
 package  org.invest_view.market.controller;
 
 import org.invest_view.market.model.Issuer;
-import org.invest_view.market.repository.DataService;
+import org.invest_view.market.repository.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

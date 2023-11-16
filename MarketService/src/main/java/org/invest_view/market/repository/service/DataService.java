@@ -1,9 +1,9 @@
-package org.invest_view.market.repository;
+package org.invest_view.market.repository.service;
 
 import org.invest_view.market.json_parser.JsonParser;
 import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.IssuerMetadata;
-import org.invest_view.market.model.TimePeriod;
+import org.invest_view.market.model.time.TimePeriod;
 import org.invest_view.market.repository.request.RequestConstructor;
 import org.springframework.stereotype.Service;
 
