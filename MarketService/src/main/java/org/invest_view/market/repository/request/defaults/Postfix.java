@@ -1,8 +1,7 @@
 package org.invest_view.market.repository.request.defaults;
 
 public enum Postfix {
-    DEFAULT_GET_FOR_LAST_MONTH_POSTFIX (".json?iss.meta=off&"
-            + ".only=history&sort_column=TRADEDATE&sort_order=desc"),
+    DEFAULT_GET_FOR_LAST_MONTH_POSTFIX (".json?iss.meta=off&.only=history"),
 
     DEFAULT_GET_DATES_POSTFIX ("/dates.json"),
 

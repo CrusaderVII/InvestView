@@ -19,7 +19,7 @@ public class ToolController {
     @Autowired
     DataService dataService;
 
-    @GetMapping("/last-month/{tool}")
+    @GetMapping("/last-month/{toolName}")
     public MarketTool getToolValuesForLastMonth(@PathVariable String toolName, @RequestParam String secId) {
         List<Issuer> issuerData = dataService.getIssuerForLastMonth(secId);
         ToolType tool = ToolType.valueOf(toolName.toUpperCase());
@@ -30,7 +30,7 @@ public class ToolController {
         return marketToolsService.calculate();
     }
 
-    @GetMapping("/last-week/{tool}")
+    @GetMapping("/last-week/{toolName}")
     public MarketTool getToolValuesForLastWeek(@PathVariable String toolName, @RequestParam String secId) {
         List<Issuer> issuerData = dataService.getIssuerForLastWeek(secId);
         ToolType tool = ToolType.valueOf(toolName.toUpperCase());

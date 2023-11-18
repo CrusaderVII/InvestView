@@ -46,17 +46,36 @@ public class JsonParser {
 
         int nameIndex = fields.indexOf("SHORTNAME");
         int openIndex  = fields.indexOf("OPEN");
+        int closeIndex = fields.indexOf("CLOSE");
         int dateIndex = fields.indexOf("TRADEDATE");
 
         ArrayNode issuerData = (ArrayNode) innerNode.get("data");
 
-        for (int i = 0; i < period; i++) {
-            JsonNode issuerDate = issuerData.get(i);
+        int iterationMonthCur = Integer.parseInt(issuerData.get(0).get(dateIndex)
+                .asText()
+                .substring(5,7));
+        int iterationMonthNext = iterationMonthCur==12 ? 1 : iterationMonthCur+1;
 
-            issuers.add(IssuerFactory.create(secId,
-                    issuerDate.get(nameIndex).asText(),
-                    issuerDate.get(openIndex).asDouble(),
-                    issuerDate.get(dateIndex).asText()));
+        issuers.add(IssuerFactory.create(secId,
+                issuerData.get(0).get(nameIndex).asText(),
+                issuerData.get(0).get(openIndex).asDouble(),
+                issuerData.get(0).get(dateIndex).asText(),
+                issuerData.get(0).get(closeIndex).asDouble()));
+        for (int i = 0; i < issuerData.size(); i++) {
+            JsonNode issuerDate = issuerData.get(i);
+            iterationMonthCur = Integer.parseInt(issuerDate.get(dateIndex)
+                    .asText()
+                    .substring(5,7));
+
+            if (iterationMonthCur==iterationMonthNext) {
+                issuers.add(IssuerFactory.create(secId,
+                        issuerDate.get(nameIndex).asText(),
+                        issuerDate.get(openIndex).asDouble(),
+                        issuerDate.get(dateIndex).asText(),
+                        issuerDate.get(closeIndex).asDouble()));
+
+                iterationMonthNext = iterationMonthNext==12? 1 : iterationMonthNext+1;
+            }
         }
 
         return issuers;

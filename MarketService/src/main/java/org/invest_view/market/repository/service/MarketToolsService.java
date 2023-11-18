@@ -9,6 +9,7 @@ import org.invest_view.market.model.market_tools.MarketTool;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -29,6 +30,9 @@ public class MarketToolsService {
             }
             case EMA100 -> {
                 result = calculateEMA100(issuerData);
+            }
+            case SMA -> {
+                result = calculateSMA(issuerData);
             }
         }
 
@@ -59,7 +63,23 @@ public class MarketToolsService {
             for (int j = 0; j <= i; j++) {
                 previousClosePricesSum+=issuerData.get(j).getPriceClose();
             }
-            double emaValue = previousClosePricesSum/i+1;
+            double emaValue = previousClosePricesSum/(i+1);
+            values.add(emaValue);
+        }
+
+        return values;
+    }
+
+    private List<Double> calculateSMA(List<Issuer> issuerData) {
+        List<Double> values = new ArrayList<>();
+        values.add(issuerData.get(0).getPriceClose());
+
+        for (int i = 1; i < issuerData.size(); i++) {
+            double previousClosePricesSum = 0;
+            for (int j = 0; j <= i; j++) {
+                previousClosePricesSum+=issuerData.get(j).getPriceClose();
+            }
+            double emaValue = previousClosePricesSum/(i+1);
             values.add(emaValue);
         }
 
