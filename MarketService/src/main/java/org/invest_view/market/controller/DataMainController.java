@@ -42,22 +42,11 @@ public class DataMainController {
         return new PageMetadata(issuers.size()/10+1);
     }
 
-    @GetMapping("/last-month")
-    public List<Issuer> getIssuer(@RequestParam String id) {
-        return service.getIssuerForLastMonth(id);
-    }
-
     @GetMapping("/dates")
     public TimePeriod getIssuerDates(@RequestParam String id) {
         return service.getIssuerDates(id);
     }
 
-    @GetMapping("/history")
-    public List<Issuer> getIssuerHistory(@RequestParam String id) {
-        List<Issuer> list = service.getIssuerHistory(id);
-
-        return list;
-    }
 
     @GetMapping("/issuers")
     public List<IssuerMetadata> getAllIssuers() {

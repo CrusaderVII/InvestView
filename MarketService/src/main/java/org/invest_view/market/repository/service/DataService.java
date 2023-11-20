@@ -3,16 +3,27 @@ package org.invest_view.market.repository.service;
 import org.invest_view.market.json_parser.JsonParser;
 import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.IssuerMetadata;
+import org.invest_view.market.model.time.TimeFrame;
 import org.invest_view.market.model.time.TimePeriod;
 import org.invest_view.market.repository.request.RequestConstructor;
+import org.invest_view.market.repository.service.json_parser.HistoryJsonParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.HTMLDocument;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 @Service
 public class DataService{
+
+    private HistoryJsonParser historyJsonParser;
+
+    @Autowired
+    public DataService(HistoryJsonParser historyJsonParser) {
+        this.historyJsonParser = historyJsonParser;
+    }
 
     public List<Issuer> getMainsNow() {
         String[] ids = {"TCSG", "SBER", "YNDX", "MTSS", "GAZP", "LKOH"};
@@ -25,33 +36,119 @@ public class DataService{
         return issuers;
     }
 
-    public List<Issuer> getIssuerForLastMonth(String secId) {
-        BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getRequest(secId));
+    private List<Issuer> getIssuerMonthly(LinkedList<Issuer> issuerData) {
+        List<Issuer> issuerDataFiltered = new LinkedList<>();
+        Iterator iterator = issuerData.iterator();
+        int currentMonth = Integer.parseInt(issuerData.getFirst()
+                .getDate()
+                .substring(5,7));
+        int nextMonth = currentMonth==12? 1 : currentMonth+1;
 
-        List<Issuer> issuerData;
+        while (iterator.hasNext()) {
+            Issuer issuer = (Issuer) iterator.next();
+            currentMonth = Integer.parseInt(issuer.getDate()
+                    .substring(5,7));
 
-        try {
-            issuerData = JsonParser
-                    .getIssuerForPeriod(JsonParser
-                            .parse(readJson(br)), secId, 30);
-        } catch (IOException e) {
-            issuerData = null;
-
-            e.printStackTrace();
+            if (currentMonth == nextMonth) {
+                issuerDataFiltered.add(issuer);
+                nextMonth = nextMonth==12? 1 : nextMonth+1;
+            }
         }
 
-        return issuerData;
+        return issuerDataFiltered;
     }
 
-    public List<Issuer> getIssuerForLastWeek(String secId) {
-        BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getRequest(secId));
+    private List<Issuer> getIssuerDaily(LinkedList<Issuer> issuerData) {
+        List<Issuer> issuerDataFiltered = new LinkedList<>();
+        Collections.reverse(issuerData);
+        Iterator iterator = issuerData.iterator();
+        int iterationDay = 0;
+
+        while (iterator.hasNext() && iterationDay<365) {
+            Issuer issuer = (Issuer) iterator.next();
+            issuerDataFiltered.add(issuer);
+            iterationDay++;}
+
+        return issuerDataFiltered;
+    }
+
+    private List<Issuer> getIssuerWeekly(LinkedList<Issuer> issuerData) {
+        List<Issuer> issuerDataFiltered = new LinkedList<>();
+        Collections.reverse(issuerData);
+        Iterator iterator = issuerData.iterator();
+
+        int currentYear = Integer.parseInt(issuerData.getFirst()
+                .getDate()
+                .substring(0,4));
+        int limitYear = currentYear-2;
+        int currentMonth = Integer.parseInt(issuerData.getFirst()
+                .getDate()
+                .substring(5,7));
+        int previousMonth = currentMonth==1 ? 12 : currentMonth-1;
+
+        while (iterator.hasNext() && currentYear>=limitYear) {
+            Issuer issuer = (Issuer) iterator.next();
+            currentMonth = Integer.parseInt(issuer.getDate()
+                    .substring(5,7));
+            currentYear = Integer.parseInt(issuer.getDate()
+                    .substring(0,4));
+        }
+
+        return issuerDataFiltered;
+    }
+
+    public List<Issuer> getIssuerHistory(String secId, TimeFrame timeFrame) {
+        List<Issuer> issuerHistory = new LinkedList<>();
+        List<Issuer> issuerHistoryOnPages = new LinkedList<>();
+        String historyCursorJson = RequestConstructor.getJson(RequestConstructor.getHistoryCursorRequest(secId));
+        historyJsonParser.setJsonNode(historyCursorJson);
+
+        int total = historyJsonParser.getPageNumber();
+        int current = 0;
+
+
+
+        switch (timeFrame){
+            case MONTH -> {
+                while (current <= total) {
+                    String dataJson = RequestConstructor.getJson(RequestConstructor.getHistroyRequest(current, secId));
+                    historyJsonParser.setJsonNode(dataJson);
+                    issuerHistoryOnPages.addAll(historyJsonParser.getIssuerHistory(secId, current, total));
+                    current += 100;
+                }
+                issuerHistory = getIssuerMonthly((LinkedList<Issuer>) issuerHistoryOnPages);
+            }
+            case WEEK -> {
+                while (current <= total) {
+                    issuerHistory.addAll(getIssuerHistoryOnPage(current, total, secId, TimeFrame.WEEK));
+                    current += 100;
+                }
+            }
+
+            case DAY -> {
+                while (current<=total) {
+                    String dataJson = RequestConstructor.getJson(RequestConstructor.getHistroyRequest(current, secId));
+                    historyJsonParser.setJsonNode(dataJson);
+                    issuerHistoryOnPages.addAll(historyJsonParser.getIssuerHistory(secId, current, total));
+                    current+=100;
+                }
+
+                issuerHistory = getIssuerDaily((LinkedList<Issuer>) issuerHistoryOnPages);
+            }
+        }
+
+        return issuerHistory;
+    }
+
+    @Deprecated
+    public List<Issuer> getIssuerHistoryOnPage(int current, int total, String secId, TimeFrame timeFrame) {
+        BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getHistroyRequest(current, secId));
 
         List<Issuer> issuerData;
 
         try {
             issuerData = JsonParser
-                    .getIssuerForPeriod(JsonParser
-                            .parse(readJson(br)), secId, 7);
+                    .getIssuerHistory(JsonParser.parse(readJson(br)), secId, current, total, timeFrame);
         } catch (IOException e) {
             issuerData = null;
 
@@ -93,51 +190,6 @@ public class DataService{
             return null;
         }
         return issuer;
-    }
-
-    public List<Issuer> getIssuerHistory(String secId) {
-        List<Issuer> issuerHistory = new ArrayList<>();
-
-        BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getHistoryCursorRequest(secId));
-
-        int total;
-        int current = 0;
-
-        try {
-            total = JsonParser
-                    .getPageNumber(JsonParser
-                            .parse(readJson(br)));
-        } catch (IOException e) {
-            total = 0;
-
-            e.printStackTrace();
-        }
-
-        while (current <= total) {
-            issuerHistory.addAll(getIssuerHistoryOnPage(current, total, secId));
-
-            current += 100;
-        }
-
-        return issuerHistory;
-    }
-
-    public List<Issuer> getIssuerHistoryOnPage(int current, int total, String secId) {
-        BufferedReader br = RequestConstructor.getPlainJson(RequestConstructor.getHistroyRequest(current, secId));
-
-        List<Issuer> issuerData;
-
-        try {
-            issuerData = JsonParser
-                    .getIssuerHistory(JsonParser
-                            .parse(readJson(br)), secId, current, total);
-        } catch (IOException e) {
-            issuerData = null;
-
-            e.printStackTrace();
-        }
-
-        return issuerData;
     }
 
     public List<IssuerMetadata> getAllIssuersMetadata() {

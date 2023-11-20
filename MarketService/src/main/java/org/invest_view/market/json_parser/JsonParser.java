@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.invest_view.market.model.Issuer;
 import org.invest_view.market.model.IssuerFactory;
 import org.invest_view.market.model.IssuerMetadata;
+import org.invest_view.market.model.time.TimeFrame;
 import org.invest_view.market.model.time.TimePeriod;
 
 import java.io.IOException;
@@ -31,54 +32,6 @@ public class JsonParser {
         JsonNode values = innerNode.get("data");
 
         return new TimePeriod(values.get(0).get(0).textValue(), values.get(0).get(1).textValue());
-    }
-
-    public static List<Issuer> getIssuerForPeriod (JsonNode jsonNode, String secId, int period) {
-        JsonNode innerNode = jsonNode.get("history");
-
-        List<String> fields = new ArrayList<>();
-        List<Issuer> issuers = new ArrayList<>();
-
-        innerNode.get("columns")
-                .iterator()
-                .forEachRemaining(fieldName -> fields
-                        .add(fieldName.asText()));
-
-        int nameIndex = fields.indexOf("SHORTNAME");
-        int openIndex  = fields.indexOf("OPEN");
-        int closeIndex = fields.indexOf("CLOSE");
-        int dateIndex = fields.indexOf("TRADEDATE");
-
-        ArrayNode issuerData = (ArrayNode) innerNode.get("data");
-
-        int iterationMonthCur = Integer.parseInt(issuerData.get(0).get(dateIndex)
-                .asText()
-                .substring(5,7));
-        int iterationMonthNext = iterationMonthCur==12 ? 1 : iterationMonthCur+1;
-
-        issuers.add(IssuerFactory.create(secId,
-                issuerData.get(0).get(nameIndex).asText(),
-                issuerData.get(0).get(openIndex).asDouble(),
-                issuerData.get(0).get(dateIndex).asText(),
-                issuerData.get(0).get(closeIndex).asDouble()));
-        for (int i = 0; i < issuerData.size(); i++) {
-            JsonNode issuerDate = issuerData.get(i);
-            iterationMonthCur = Integer.parseInt(issuerDate.get(dateIndex)
-                    .asText()
-                    .substring(5,7));
-
-            if (iterationMonthCur==iterationMonthNext) {
-                issuers.add(IssuerFactory.create(secId,
-                        issuerDate.get(nameIndex).asText(),
-                        issuerDate.get(openIndex).asDouble(),
-                        issuerDate.get(dateIndex).asText(),
-                        issuerDate.get(closeIndex).asDouble()));
-
-                iterationMonthNext = iterationMonthNext==12? 1 : iterationMonthNext+1;
-            }
-        }
-
-        return issuers;
     }
 
     public static Issuer getIssuerNow(JsonNode jsonNode, String secId) {
@@ -113,7 +66,7 @@ public class JsonParser {
                 innerNodeMarketData.get("data").get(0).get(changeIndex).asDouble());
     }
 
-    public static List<Issuer> getIssuerHistory(JsonNode jsonNode, String secId, int current, int total) {
+    public static List<Issuer> getIssuerHistory(JsonNode jsonNode, String secId, int current, int total, TimeFrame timeFrame) {
         JsonNode innerNode = jsonNode.get("history");
 
         List<String> fields = new ArrayList<>();
@@ -151,6 +104,63 @@ public class JsonParser {
         }
 
         return issuers;
+    }
+
+    public static List<Issuer> getIssuerMonthly (JsonNode jsonNode, String secId, int current, int total) {
+        JsonNode innerNode = jsonNode.get("history");
+
+        List<String> fields = new ArrayList<>();
+        List<Issuer> issuers = new ArrayList<>();
+
+        innerNode.get("columns")
+                .iterator()
+                .forEachRemaining(fieldName -> fields
+                        .add(fieldName.asText()));
+
+        int nameIndex = fields.indexOf("SHORTNAME");
+        int openIndex  = fields.indexOf("OPEN");
+        int closeIndex = fields.indexOf("CLOSE");
+        int dateIndex = fields.indexOf("TRADEDATE");
+
+        ArrayNode issuerData = (ArrayNode) innerNode.get("data");
+
+        int iterationMonthCur = Integer.parseInt(issuerData.get(0).get(dateIndex)
+                .asText()
+                .substring(5,7));
+        int iterationMonthNext = iterationMonthCur==12 ? 1 : iterationMonthCur+1;
+        issuers.add(IssuerFactory.create(secId,
+                issuerData.get(0).get(nameIndex).asText(),
+                issuerData.get(0).get(openIndex).asDouble(),
+                issuerData.get(0).get(dateIndex).asText(),
+                issuerData.get(0).get(closeIndex).asDouble()));
+
+        for (int i = 0; i < (current+100 > total ? total-current : 100); i+=1) {
+            JsonNode issuerDate = issuerData.get(i);
+            iterationMonthCur = Integer.parseInt(issuerDate.get(dateIndex)
+                    .asText()
+                    .substring(5,7));
+
+            if (iterationMonthCur==iterationMonthNext) {
+                issuers.add(IssuerFactory.create(secId,
+                        issuerDate.get(nameIndex).asText(),
+                        issuerDate.get(openIndex).asDouble(),
+                        issuerDate.get(dateIndex).asText(),
+                        issuerDate.get(closeIndex).asDouble()));
+
+                iterationMonthNext = iterationMonthNext==12? 1 : iterationMonthNext+1;
+            }
+        }
+
+        return issuers;
+    }
+
+    public static List<Issuer> getIssuerWeekly(JsonNode jsonNode, String secId) {
+        JsonNode innerNode = jsonNode.get("history");
+
+        List<String> fields = new ArrayList<>();
+        List<Issuer> issuerData = new ArrayList<>();
+
+        return issuerData;
     }
 
     public static int getPageNumber(JsonNode jsonNode) {

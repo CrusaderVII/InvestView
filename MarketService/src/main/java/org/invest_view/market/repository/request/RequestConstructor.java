@@ -2,6 +2,7 @@ package org.invest_view.market.repository.request;
 
 import org.invest_view.market.repository.request.defaults.Postfix;
 import org.invest_view.market.repository.request.defaults.Prefix;
+import org.springframework.cloud.loadbalancer.core.ReactorLoadBalancer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,6 +41,12 @@ public class RequestConstructor {
         ResponseEntity<String> responseEntity = template.getForEntity(request, String.class);
 
         return new BufferedReader(new StringReader(responseEntity.getBody()));
+    }
+
+    public static  String getJson(String request) {
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<String> responseEntity = template.getForEntity(request, String.class);
+        return responseEntity.getBody();
     }
 
 }

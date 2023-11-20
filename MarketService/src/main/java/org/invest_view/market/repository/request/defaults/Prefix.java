@@ -1,7 +1,7 @@
 package org.invest_view.market.repository.request.defaults;
 
 public enum Prefix {
-    DEFAULT_GET_HISTORY_PREFIX ("http://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/"),
+    DEFAULT_GET_HISTORY_PREFIX ("https://iss.moex.com/iss/history/engines/stock/markets/shares/securities/"),
 
     DEFAULT_GET_NOW_PREFIX ("https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/"),
 
